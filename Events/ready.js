@@ -10,6 +10,7 @@ module.exports = async client => {
     .setAuthor(client.user.username, client.user.avatarURL)
     .setColor('#FF0000')
     .setDescription(`SATAROSS Systems Online and Ready!`)
+    .addField(`Mode`, client.mode, true)
     .addField(`Headless`, config.HEADLESS, true)
     .addField(`Redirect Wait Time`, `${config.REDIRECT_WAIT_TIME}ms`, true)
     .setThumbnail(

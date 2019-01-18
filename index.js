@@ -8,9 +8,11 @@ const http = require('http')
 const Discord = require('discord.js')
 const express = require('express')
 const app = express()
+const mode = 'discord'
 const client = new Discord.Client()
 require('./Utils/functions.js')(client)
 client.commands = new Discord.Collection()
+client.mode = mode
 
 /**
  * Discord Events
@@ -50,8 +52,12 @@ const initDiscord = async () => {
 // Main function
 const initSATAROSS = async () => {
   await initDiscord().then(async () => {
-    console.log(`SATAROSS Ready and Started!`)
+    console.log(`Discord Initalized!`)
   })
+  await initExpress().then(async () => {
+    console.log(`Express Initalized!`)
+  })
+
   // Get current date and time
   let currentTime = await require('./Utils/utils').getDateAndTime()
 
@@ -194,6 +200,17 @@ const initExpress = async () => {
   console.log(`HTTP ready at port ${config.Express.HTTP_PORT}`)
 }
 
-// initDiscord()
-initExpress()
-initSATAROSS()
+switch (mode.toLowerCase()) {
+  case 'discord':
+    initDiscord()
+    break
+  case 'express':
+    initExpress()
+    break
+  case 'sataross':
+    initSATAROSS()
+    break
+  case 'prod':
+    initSATAROSS()
+    break
+}
