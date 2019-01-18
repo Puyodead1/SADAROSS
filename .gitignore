@@ -1,0 +1,6 @@
+node_modules/
+data/
+
+config.js
+scannedLinks.log
+scamLinks.log

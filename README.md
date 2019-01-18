@@ -9,8 +9,6 @@
   <a href="https://github.com/Puyodead1-Development/SATAROSS">
   <img https://img.shields.io/github/languages/code-size/badges/shields.svg />
   </a>
-   <a href="ttps://github.com/Puyodead1-Development/SATAROSS">
-        <img src="https://img.shields.io/github/commit-status/Puyodead1-Development/SATAROSS/master/514b7c3d5dcfaebdee7ea506e95996b8ab4e9f59.svg?style=plastic" /></a>
    <a href="https://github.com/Puyodead1-Development/SATAROSS">
         <img src="https://img.shields.io/github/license/Puyodead1-Development/SATAROSS.svg?style=plastic" /></a>
    <a href="https://github.com/Puyodead1-Development">
@@ -25,8 +23,8 @@
 
 - Automated Scam Site finder
 - Uses Puppeteer to scower the inter webs for those good ol' scam sites!
-- To be updated
+- Discord Integration
 
 # Upcoming Features
 
-- To be updated
+- Seperate Discord events into there own files.

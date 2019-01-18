@@ -1,110 +1,109 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const puppeteer = require('puppeteer')
+const config = require('./config')
+const fs = require('fs')
+const Discord = require('discord.js')
+const client = new Discord.Client()
+
+/**
+ * Discord Events
+ */
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-});
+  console.log(`Discord Ready!`)
+  const logChannel = client.guilds
+    .get(config.Discord.LOG_SERVER)
+    .channels.get(config.Discord.LOG_CHANNEL)
+  const readyEmbed = new Discord.RichEmbed()
+    .setAuthor(client.user.username, client.user.avatarURL)
+    .setColor('#FF0000')
+    .setDescription(`SATAROSS Systems Online and Ready!`)
+    .setThumbnail(
+      'https://cdn.pixabay.com/photo/2014/04/02/11/01/tick-305245_960_720.png'
+    )
+    .setTimestamp()
+    .setFooter(
+      `SATAROSS by Puyodead1 and Puyodead1 Development`,
+      client.user.avatarURL
+    )
+  logChannel.send(readyEmbed)
+})
+client.on('error', err => {
+  console.log(`Got an error from discord x_x. ${err}`)
+})
 
-var links = ['http://ggmail.com',
-  'http://geogle.com',
-  'http://ghogle.com',
-  'http://goigle.com',
-  'http://googae.com',
-  'http://googee.com',
-  'http://googhe.com',
-  'http://googln.com',
-  'http://googlo.com',
-  'http://googme.com',
-  'http://googre.com',
-  'http://googte.com',
-  'http://googwe.com',
-  'http://gookle.com',
-  'http://goolle.com',
-  'http://goonle.com',
-  'http://gooqle.com',
-  'http://gooxle.com',
-  'http://gooyle.com',
-  'http://gopgle.com',
-  'http://gpogle.com',
-  'http://guogle.com',
-  'http://gyogle.com',
-  'http://youtubd.com',
-  'http://youtubs.com',
-  'http://youtubu.com'
-];
-var counter = 0;
-//var user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
-
-async function timeout(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+/**
+ * Initalize Discord
+ */
+async function initDiscord () {
+  await client.login(config.Discord.TOKEN)
 }
 
-function getDateTime() {
+// Main function
+async function initSATAROSS () {
+  initDiscord().then(async () => {
+    console.log(`SATAROSS Ready and Started!`)
+  })
+  // I forgot what this even fucking does....
+  let counter = 0
 
-  var date = new Date();
+  // Get current date and time
+  let currentTime = await require('./Utils/utils').getDateAndTime()
 
-  var hour = date.getHours();
-  hour = (hour < 10 ? "0" : "") + hour;
-
-  var min = date.getMinutes();
-  min = (min < 10 ? "0" : "") + min;
-
-  var sec = date.getSeconds();
-  sec = (sec < 10 ? "0" : "") + sec;
-
-  var year = date.getFullYear();
-
-  var month = date.getMonth() + 1;
-  month = (month < 10 ? "0" : "") + month;
-
-  var day = date.getDate();
-  day = (day < 10 ? "0" : "") + day;
-
-  return year + "-" + month + "-" + day + "-" + hour + "-" + min + "-" + sec;
-
-}
-
-(async () => {
   while (true) {
-    for (let storyLink of links) {
+    for (let link of config.LinkList) {
       const browser = await puppeteer.launch({
+        /**
+         * headless sets whether a browser page is displayed or not
+         * set to false to see a browser window
+         * set to true to run invisible
+         */
         headless: false
-      });
-      const page = await browser.newPage();
-      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko');
+      })
+      const page = await browser.newPage()
+      await page.setUserAgent(
+        'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
+      )
       await page.setViewport({
         width: 1920,
-        height: 1080,
-      });
-      var currentTime = getDateTime();
-      await page.goto(storyLink);
+        height: 1080
+      })
+      await page.goto(link)
 
-      //Wait for page to fully load/redirect
-      await timeout(15000);
+      // Wait for page to fully load/redirect
+      await require('./Utils/utils').wait(config.REDIRECT_WAIT_TIME)
+
+      // Write the link
+      fs.appendFile(
+        config.SCANNED_LINKS_LOG,
+        currentTime + ' ' + page.url() + '\n',
+        err => {
+          if (err) throw err
+        }
+      )
       //
 
-      //Write the link
-      fs.appendFile('alllinks.log', currentTime + ' ' + page.url() + "\n", (err) => {
-        if (err) throw err;
-      });
-      //
+      const found = /virus|infected|pornographic|spyware|riskware|blocked|locked|toll/.test(
+        await page.content()
+      )
 
-      const found = /virus|infected|pornographic|spyware|riskware|blocked|locked|toll/.test(await page.content());
-      console.log(found);
+      // This will print true or false
+      console.log(found)
       if (found) {
-        console.log('posible scam site');
+        console.log('posible scam site')
         await page.screenshot({
           path: './data/' + currentTime + '.png'
-        });
-        client.channels.get("id of discord channel").send("Possible Scam Site Found!", {
-          file: "./data/" + currentTime + ".png"
-        });
+        })
+        client.guilds
+          .get(config.Discord.LOG_SERVER)
+          .channels.get(config.Discord.LOG_CHANNEL)
+          .send('Possible Scam Site Found!', {
+            file: './data/' + currentTime + '.png'
+          })
       }
-      counter++;
-      await browser.close();
-    };
+      counter++
+      await browser.close()
+    }
   }
-})();
+}
 
-client.login('');
+// initDiscord()
+initSATAROSS()
