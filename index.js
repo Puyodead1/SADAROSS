@@ -82,9 +82,7 @@ const initSATAROSS = async () => {
         width: 1920,
         height: 1080
       })
-      await page.goto(
-        'http://greaterafford.online/yyt/hhu.html?n=KDg1NSkgODQ1LTgyMTU='
-      )
+      await page.goto(link)
 
       await require('./Utils/utils').wait(config.REDIRECT_WAIT_TIME)
       /* await page
@@ -132,9 +130,7 @@ const initSATAROSS = async () => {
           .addField(`URL`, await page.url(), true)
           .setTimestamp()
           .setThumbnail(
-            `https://puyodead1-development.me:${
-              config.Express.HTTPS_PORT
-            }/img/${currentTime}.png`
+            `http://puyodead1-development.me:2685/img/${currentTime}.png`
           )
           .setFooter(
             `SATAROSS by Puyodead1 and Puyodead1 Development`,
