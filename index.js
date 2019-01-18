@@ -78,12 +78,12 @@ const initSATAROSS = async () => {
       })
       await page.goto(link)
 
-      await page
+      await require('./Utils/utils').wait(config.REDIRECT_WAIT_TIME)
+      /* await page
         .waitForNavigation({
-          timeout: 0,
-          waitUntil: 'domcontentloaded'
-        })
-        .then(async () => console.log(`Navigation done`))
+          timeout: config.REDIRECT_WAIT_TIME,
+          waitUntil: 'networkidle0'
+        }) */
 
       // Write the link
       fs.appendFile(
@@ -95,7 +95,7 @@ const initSATAROSS = async () => {
       )
       //
 
-      const found = /virus|infected|pornographic|spyware|riskware|blocked|locked|toll/.test(
+      const found = /virus|infected|pornographic|spyware|riskware|locked|toll/i.test(
         await page.content()
       )
 
@@ -140,7 +140,7 @@ const initSATAROSS = async () => {
 /**
  * This is for DEVELOPMENT ONLY
  */
-process.on('uncaughtException', async err => {
+process.on('unhandledRejection', async err => {
   const logChannel = client.guilds
     .get(config.Discord.LOG_SERVER)
     .channels.get(config.Discord.LOG_CHANNEL)
