@@ -1,6 +1,5 @@
 const Discord = require('discord.js')
 const config = require('../config')
-const fs = require('fs')
 
 exports.run = async (client, msg, args) => {
   if (args.length !== 1) {

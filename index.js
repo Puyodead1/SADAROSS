@@ -8,7 +8,7 @@ const http = require('http')
 const Discord = require('discord.js')
 const express = require('express')
 const app = express()
-const mode = 'discord'
+const mode = 'prod'
 const client = new Discord.Client()
 require('./Utils/functions.js')(client)
 client.commands = new Discord.Collection()
