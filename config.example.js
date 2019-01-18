@@ -1,10 +1,11 @@
 const config = {
   Discord: {
-    TOKEN: process.env.TOKEN || '',
+    TOKEN: process.env.TOKEN || 'ToKEN',
     LOG_SERVER: '518898839835508736',
     LOG_CHANNEL: '535601459694403634',
     PREFIX: 's!'
   },
+  DEBUG: false,
   LinkList: [
     'http://ggmail.com',
     'http://geogle.com',
@@ -34,6 +35,7 @@ const config = {
     'http://youtubu.com'
   ],
   REDIRECT_WAIT_TIME: 15000,
-  SCANNED_LINKS_LOG: 'scannedLinks.log'
+  SCANNED_LINKS_LOG: 'scannedLinks.log',
+  SCAM_LINK_LOG: 'scamLinks.log'
 }
 module.exports = config

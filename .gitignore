@@ -1,5 +1,6 @@
 node_modules/
 data/
+debug/
 
 config.js
 scannedLinks.log
