@@ -95,7 +95,7 @@ const initSATAROSS = async () => {
       )
       //
 
-      const found = /virus|infected|pornographic|spyware|riskware|locked|toll/i.test(
+      const found = /virus|infected|pornographic|spyware|riskware|locked|microsoft|technician/i.test(
         await page.content()
       )
 
