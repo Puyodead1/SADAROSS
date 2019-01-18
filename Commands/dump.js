@@ -34,3 +34,9 @@ exports.run = async (client, msg, args) => {
       break
   }
 }
+exports.help = {
+  name: 'dump',
+  category: 'Bot',
+  description: 'Attach logs',
+  usage: 'dump'
+}

@@ -40,3 +40,9 @@ exports.run = async (client, msg, args) => {
     return msg.channel.send(embed1)
   }
 }
+exports.help = {
+  name: 'quit',
+  category: 'Bot',
+  description: 'Shutdown',
+  usage: 'quit'
+}

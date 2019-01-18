@@ -18,3 +18,9 @@ exports.run = async (client, msg, args) => {
       console.log(response.body)
     })
 }
+exports.help = {
+  name: 'whois',
+  category: 'Bot',
+  description: 'Get whois info',
+  usage: 'whois'
+}
