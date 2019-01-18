@@ -1,22 +1,44 @@
-const unirest = require('unirest')
 const config = require('../config')
+const Discord = require('discord.js')
+const request = require('request')
+const fs = require('fs')
 
 exports.run = async (client, msg, args) => {
-  console.log(args)
-  return unirest
-    .get('https://jsonwhois.com/api/v1/whois')
-    .headers({
-      Accept: 'application/json',
-      Authorization: `Token token=${config.WHOIS_API_KEY}`
-    })
+  request(
+    `https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey=${
+      config.WHOIS_API_KEY
+    }&domainName=${args[0]}&outputFormat=JSON`,
+    async function (err, response, body) {
+      if (err) console.log(err)
+      let json = JSON.parse(body)
+      let embed = new Discord.RichEmbed()
+        .setAuthor(client.user.username, client.user.avatarURL)
+        .setColor('#FF0000')
+        .setTimestamp()
+        .setDescription(
+          `WHOIS Information for ${json.WhoisRecord.registrant.organization}`
+        )
+        .addField(`Registrant`, json.WhoisRecord.registrant.organization, true)
+        .addField(`Registrant State`, json.WhoisRecord.registrant.state, true)
+        .addField(
+          `Registrant Country`,
+          `${json.WhoisRecord.registrant.country}/${
+            json.WhoisRecord.registrant.countryCode
+          }`
+        )
+        .addField(`Domain Name`, json.WhoisRecord.domainName, true)
+        .setFooter(
+          `WHOIS Information requested by ${msg.author.username}`,
+          msg.author.avatarURL
+        )
 
-    .query({
-      domain: 'google.com'
-    })
+      fs.writeFile(`./data/${json.WhoisRecord.domainName}.json`, body, err => {
+        if (err) throw err
+      })
 
-    .end(function (response) {
-      console.log(response.body)
-    })
+      await msg.channel.send(embed)
+    }
+  )
 }
 exports.help = {
   name: 'whois',

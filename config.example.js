@@ -36,6 +36,8 @@ const config = {
   ],
   REDIRECT_WAIT_TIME: 15000,
   SCANNED_LINKS_LOG: 'scannedLinks.log',
-  SCAM_LINK_LOG: 'scamLinks.log'
+  SCAM_LINK_LOG: 'scamLinks.log',
+  HEADLESS: true,
+  WHOIS_API_KEY: ''
 }
 module.exports = config
