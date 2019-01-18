@@ -5,6 +5,7 @@ const readdir = promisify(require('fs').readdir)
 const fs = require('fs')
 const Discord = require('discord.js')
 const express = require('express')
+const favicon = require('express-favicon')
 const app = express()
 const client = new Discord.Client()
 require('./Utils/functions.js')(client)
@@ -170,8 +171,10 @@ process.on('unhandledRejection', async err => {
 })
 
 const initExpress = async () => {
+  app.use(express.static('./views/public'))
+  app.set('view engine', 'ejs')
   app.get('/', function (req, res) {
-    res.send('Hello World')
+    res.render('pages/index')
   })
 
   app.listen(config.Express.PORT)
@@ -180,4 +183,4 @@ const initExpress = async () => {
 
 // initDiscord()
 initExpress()
-initSATAROSS()
+// initSATAROSS()
