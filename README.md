@@ -9,6 +9,8 @@
   <a href="https://github.com/Puyodead1-Development/SATAROSS">
   <img https://img.shields.io/github/languages/code-size/badges/shields.svg />
   </a>
+  <a href="ttps://github.com/Puyodead1-Development/SATAROSS">
+        <img src="https://img.shields.io/github/commit-status/Puyodead1-Development/SATAROSS/master/7c99b43795f30bc4909db538017ebc0f1c7c0ab7.svg?style=plastic" /></a>
    <a href="https://github.com/Puyodead1-Development/SATAROSS">
         <img src="https://img.shields.io/github/license/Puyodead1-Development/SATAROSS.svg?style=plastic" /></a>
    <a href="https://github.com/Puyodead1-Development">
