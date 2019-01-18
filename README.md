@@ -30,3 +30,8 @@
 # Upcoming Features
 
 - Seperate Discord events into there own files.
+
+# Contributors
+
+- Puyodead1 (Lead Developer)
+- content-deletd
