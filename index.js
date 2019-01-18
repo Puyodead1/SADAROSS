@@ -23,7 +23,6 @@ const initDiscord = async () => {
   const cmdFiles = await readdir('./Commands/')
   console.log(`Loading a total of ${cmdFiles.length} commands.`)
   cmdFiles.forEach(f => {
-    if (f.startsWith('_template')) return
     if (!f.endsWith('.js')) return
     const response = client.loadCommand(f)
     if (response) console.log(response)
