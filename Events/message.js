@@ -9,16 +9,10 @@ module.exports = async (client, message) => {
     // command = say
     // args = ['Is', 'this', 'the', 'real', 'life?']
     const args = message.content
-      .slice(config.Discord.PREFIX)
+      .slice(config.Discord.PREFIX.length)
       .trim()
       .split(/ +/g)
     const command = args.shift().toLowerCase()
-
-    // If the member on a guild is invisible or not cached, fetch them.
-    if (message.guild && !message.member) {
-      await message.guild.fetchMember(message.author)
-    }
-
     // Check whether the command, or alias, exist in the collections defined
     // in app.js.
     const cmd = client.commands.get(command)
@@ -26,10 +20,6 @@ module.exports = async (client, message) => {
     // and clean way to grab one of 2 values!
     if (!cmd) return
 
-    message.flags = []
-    while (args[0] && args[0][0] === '-') {
-      message.flags.push(args.shift().slice(1))
-    }
     // If the command exists, **AND** the user has permission, run it.
     console.log(
       `[CMD] ${message.author.username} (${message.author.id}) ran command ${

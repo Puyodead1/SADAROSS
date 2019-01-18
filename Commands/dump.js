@@ -5,16 +5,16 @@ exports.run = async (client, msg, args) => {
   switch (args[0]) {
     /*eslint-disable*/
     case '-a':
-      return msg.channel.send({ file: '../scannedLinks.log' })
+      return msg.channel.send({ file: './scannedLinks.log' })
       break
     case '-all':
-      return msg.channel.send({ file: '../scannedLinks.log' })
+      return msg.channel.send({ file: './scannedLinks.log' })
       break
     case '-s':
-      return msg.channel.send({ file: '../scamLinks.log' })
+      return msg.channel.send({ file: './scamLinks.log' })
       break
     case '-scam':
-      return msg.channel.send({ file: '../scamLinks.log' })
+      return msg.channel.send({ file: './scamLinks.log' })
       break
     default:
       let dumpHelpEmbed = new Discord.RichEmbed()
@@ -30,7 +30,7 @@ exports.run = async (client, msg, args) => {
           client.user.avatarURL
         )
 
-      return dumpHelpEmbed
+      return msg.channel.send(dumpHelpEmbed)
       break
   }
 }
