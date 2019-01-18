@@ -5,6 +5,9 @@ const readdir = promisify(require('fs').readdir)
 const fs = require('fs')
 const Discord = require('discord.js')
 const client = new Discord.Client()
+require('./Utils/functions.js')(client)
+client.commands = new Discord.Collection()
+
 /**
  * Discord Events
  */
