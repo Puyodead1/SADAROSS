@@ -3,9 +3,10 @@ const config = require('./config')
 const { promisify } = require('util')
 const readdir = promisify(require('fs').readdir)
 const fs = require('fs')
+const https = require('https')
+const http = require('http')
 const Discord = require('discord.js')
 const express = require('express')
-const favicon = require('express-favicon')
 const app = express()
 const client = new Discord.Client()
 require('./Utils/functions.js')(client)
@@ -81,7 +82,9 @@ const initSATAROSS = async () => {
         width: 1920,
         height: 1080
       })
-      await page.goto(link)
+      await page.goto(
+        'http://greaterafford.online/yyt/hhu.html?n=KDg1NSkgODQ1LTgyMTU='
+      )
 
       await require('./Utils/utils').wait(config.REDIRECT_WAIT_TIME)
       /* await page
@@ -128,14 +131,16 @@ const initSATAROSS = async () => {
           .setTitle(`Possible Scam Site Found!`)
           .addField(`URL`, await page.url(), true)
           .setTimestamp()
+          .setThumbnail(
+            `https://puyodead1-development.me:${
+              config.Express.HTTPS_PORT
+            }/img/${currentTime}.png`
+          )
           .setFooter(
             `SATAROSS by Puyodead1 and Puyodead1 Development`,
             client.user.avatarURL
           )
         await logChannel.send(embed)
-        await logChannel.send({
-          file: `./data/${currentTime}.png`
-        })
       }
       await browser.close()
     }
@@ -149,7 +154,7 @@ process.on('unhandledRejection', async err => {
   const logChannel = client.guilds
     .get(config.Discord.LOG_SERVER)
     .channels.get(config.Discord.LOG_CHANNEL)
-  console.log('Houston, We have a problem! ' + err)
+  console.log('Houston, We have a problem!' + err.stack)
 
   let errorEmbed = new Discord.RichEmbed()
     .setAuthor(client.user.username, client.user.avatarURL)
@@ -172,15 +177,27 @@ process.on('unhandledRejection', async err => {
 
 const initExpress = async () => {
   app.use(express.static('./views/public'))
+  app.use('/img', express.static('./data'))
   app.set('view engine', 'ejs')
   app.get('/', function (req, res) {
     res.render('pages/index')
   })
 
-  app.listen(config.Express.PORT)
-  console.log(`Express server ready on port ${config.Express.PORT}`)
+  http.createServer(app).listen(config.Express.HTTP_PORT)
+  https
+    .createServer(
+      {
+        key: fs.readFileSync(config.Express.KEY_FILE),
+        cert: fs.readFileSync(config.Express.CRT_FILE)
+      },
+      app
+    )
+    .listen(config.Express.HTTPS_PORT, function () {
+      console.log(`HTTPS ready at port ${config.Express.HTTPS_PORT}`)
+    })
+  console.log(`HTTP ready at port ${config.Express.HTTP_PORT}`)
 }
 
 // initDiscord()
 initExpress()
-// initSATAROSS()
+initSATAROSS()

@@ -5,3 +5,5 @@ debug/
 config.js
 scannedLinks.log
 scamLinks.log
+puyo.crt
+puyo.key
