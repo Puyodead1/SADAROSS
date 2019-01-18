@@ -1,11 +1,17 @@
 const config = {
   Discord: {
-    TOKEN: process.env.TOKEN || 'ToKEN',
-    LOG_SERVER: '518898839835508736',
-    LOG_CHANNEL: '535601459694403634',
+    TOKEN: process.env.TOKEN || 'Token',
+    LOG_SERVER: 'server id',
+    LOG_CHANNEL: 'channel id',
     PREFIX: 's!'
   },
-  DEBUG: false,
+  Express: {
+    HTTP_PORT: 2685,
+    HTTPS_PORT: 2686,
+    CRT_FILE: './file.crt',
+    KEY_FILE: './file.key'
+  },
+  DEBUG: true,
   LinkList: [
     'http://ggmail.com',
     'http://geogle.com',
@@ -19,8 +25,6 @@ const config = {
     'http://googme.com',
     'http://googre.com',
     'http://googte.com',
-    'http://googwe.com',
-    'http://gookle.com',
     'http://goolle.com',
     'http://goonle.com',
     'http://gooqle.com',
@@ -29,7 +33,6 @@ const config = {
     'http://gopgle.com',
     'http://gpogle.com',
     'http://guogle.com',
-    'http://gyogle.com',
     'http://youtubd.com',
     'http://youtubs.com',
     'http://youtubu.com'
