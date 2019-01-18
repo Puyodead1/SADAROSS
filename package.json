@@ -33,7 +33,8 @@
   "homepage": "https://github.com/Puyodead1-Development/SATAROSS#readme",
   "dependencies": {
     "discord.js": "^11.4.2",
-    "puppeteer": "^1.11.0"
+    "puppeteer": "^1.11.0",
+    "unirest": "^0.5.1"
   },
   "devDependencies": {
     "eslint": "^5.12.0",
