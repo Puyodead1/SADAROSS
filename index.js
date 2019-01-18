@@ -4,6 +4,8 @@ const { promisify } = require('util')
 const readdir = promisify(require('fs').readdir)
 const fs = require('fs')
 const Discord = require('discord.js')
+const express = require('express')
+const app = express()
 const client = new Discord.Client()
 require('./Utils/functions.js')(client)
 client.commands = new Discord.Collection()
@@ -129,8 +131,8 @@ const initSATAROSS = async () => {
             `SATAROSS by Puyodead1 and Puyodead1 Development`,
             client.user.avatarURL
           )
-        logChannel.send(embed)
-        logChannel.send({
+        await logChannel.send(embed)
+        await logChannel.send({
           file: `./data/${currentTime}.png`
         })
       }
@@ -167,5 +169,15 @@ process.on('unhandledRejection', async err => {
   return process.exit(1)
 })
 
+const initExpress = async () => {
+  app.get('/', function (req, res) {
+    res.send('Hello World')
+  })
+
+  app.listen(config.Express.PORT)
+  console.log(`Express server ready on port ${config.Express.PORT}`)
+}
+
 // initDiscord()
+initExpress()
 initSATAROSS()
