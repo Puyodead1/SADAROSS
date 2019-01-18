@@ -1,140 +1,66 @@
 const puppeteer = require('puppeteer')
 const config = require('./config')
+const { promisify } = require('util')
+const readdir = promisify(require('fs').readdir)
 const fs = require('fs')
 const Discord = require('discord.js')
 const client = new Discord.Client()
-var logChannel
 /**
  * Discord Events
  */
-client.on('ready', () => {
-  logChannel = client.guilds
-    .get(config.Discord.LOG_SERVER)
-    .channels.get(config.Discord.LOG_CHANNEL)
-  console.log(`Discord Ready!`)
-  const readyEmbed = new Discord.RichEmbed()
-    .setAuthor(client.user.username, client.user.avatarURL)
-    .setColor('#FF0000')
-    .setDescription(`SATAROSS Systems Online and Ready!`)
-    .addField(`Headless`, config.HEADLESS, true)
-    .addField(`Redirect Wait Time`, `${config.REDIRECT_WAIT_TIME}ms`, true)
-    .setThumbnail(
-      'https://cdn.pixabay.com/photo/2014/04/02/11/01/tick-305245_960_720.png'
-    )
-    .setTimestamp()
-    .setFooter(
-      `SATAROSS by Puyodead1 and Puyodead1 Development`,
-      client.user.avatarURL
-    )
-  logChannel.send(readyEmbed)
-})
+
 client.on('error', err => {
   console.log(`Got an error from discord x_x. ${err}`)
-})
-client.on('message', async msg => {
-  if (msg.author.bot) return
-  if (!msg.content.startsWith(config.Discord.PREFIX)) return
-  let args = msg.content
-    .slice(config.Discord.PREFIX.length)
-    .trim()
-    .split(/ +/g)
-  let command = args[0].toLowerCase()
-  args.shift()
-
-  if (command === 'dump') {
-    switch (args[0]) {
-      /*eslint-disable*/
-      case '-a':
-        return msg.channel.send({ file: './scannedLinks.log' })
-        break
-      case '-all':
-        return msg.channel.send({ file: './scannedLinks.log' })
-        break
-      case '-s':
-        return msg.channel.send({ file: './scamLinks.log' })
-        break
-      case '-scam':
-        return msg.channel.send({ file: './scamLinks.log' })
-        break
-      default:
-        let dumpHelpEmbed = new Discord.RichEmbed()
-          .setAuthor(client.user.username, client.user.avatarURL)
-          .setColor('#FF0000')
-          .setTitle(`SATAROSS Development Dumping`)
-          .setDescription(`Used to attach logs`)
-          .addField(`All Links`, 's!dump -a or s!dump -all')
-          .addField(`Scam Links Only`, 's!dump -s or s!dump -scam')
-          .setTimestamp()
-          .setFooter(
-            `SATAROSS by Puyodead1 and Puyodead1 Development`,
-            client.user.avatarURL
-          )
-
-        return dumpHelpEmbed
-        break
-      /* eslint-enable */
-    }
-  } else if (command === 'quit') {
-    if (
-      msg.author.id === '213247101314924545' ||
-      msg.author.id === '505466807092772865' ||
-      msg.author.id === '213247101314924545'
-    ) {
-      if (!args.length >= 1) {
-        let embed = new Discord.RichEmbed()
-          .setAuthor(client.user.username, client.user.avatarURL)
-          .setColor('#FF0000')
-          .setDescription(`Invalid Syntax`)
-          .addField(`Usage`, `s!quit <reason>`)
-          .setTimestamp()
-          .setFooter(
-            `SATAROSS by Puyodead1 and Puyodead1 Development`,
-            client.user.avatarURL
-          )
-        return msg.channel.send(embed)
-      }
-      let reason = args.join(' ')
-      await msg.guild.members
-        .get('213247101314924545')
-        .send(`${msg.author.username} shut me down for ${reason}`)
-      await msg.channel.send(
-        `System Shutdown for ${reason}. Incident has been reported.`
-      )
-      return process.exit(0)
-    } else {
-      let embed1 = new Discord.RichEmbed()
-        .setAuthor(client.user.username, client.user.avatarURL)
-        .setColor('#FF0000')
-        .setDescription(`You are not authorized to do that!`)
-        .setTimestamp()
-        .setFooter(
-          `SATAROSS by Puyodead1 and Puyodead1 Development`,
-          client.user.avatarURL
-        )
-      return msg.channel.send(embed1)
-    }
-  }
 })
 
 /**
  * Initalize Discord
  */
-async function initDiscord () {
+const initDiscord = async () => {
+  const cmdFiles = await readdir('./Commands/')
+  console.log(`Loading a total of ${cmdFiles.length} commands.`)
+  cmdFiles.forEach(f => {
+    if (f.startsWith('_template')) return
+    if (!f.endsWith('.js')) return
+    const response = client.loadCommand(f)
+    if (response) console.log(response)
+  })
+  // Then we load events, which will include our message and ready event.
+  const evtFiles = await readdir('./Events/')
+  console.log(`Loading a total of ${evtFiles.length} events.`)
+  evtFiles.forEach(file => {
+    const eventName = file.split('.')[0]
+    console.log(`Loading Event: ${eventName}`)
+    const event = require(`./Events/${file}`)
+    // Bind the client to any event, before the existing arguments
+    // provided by the discord.js event.
+    // This line is awesome by the way. Just sayin'.
+    client.on(eventName, event.bind(null, client))
+  })
+
   await client.login(config.Discord.TOKEN)
 }
 
 // Main function
-async function initSATAROSS () {
-  initDiscord().then(async () => {
+const initSATAROSS = async () => {
+  await initDiscord().then(async () => {
     console.log(`SATAROSS Ready and Started!`)
   })
-
   // Get current date and time
   let currentTime = await require('./Utils/utils').getDateAndTime()
+
+  // Get Discord log channel
+  const logChannel = client.guilds
+    .get(config.Discord.LOG_SERVER)
+    .channels.get(config.Discord.LOG_CHANNEL)
 
   while (true) {
     for (let link of config.LinkList) {
       const browser = await puppeteer.launch({
+        /**
+         * Required on linux systems in headless mode
+         */
+        args: ['--no-sandbox'],
         /**
          * headless sets whether a browser page is displayed or not
          * set to false to see a browser window
@@ -152,8 +78,12 @@ async function initSATAROSS () {
       })
       await page.goto(link)
 
-      // Wait for page to fully load/redirect
-      await require('./Utils/utils').wait(config.REDIRECT_WAIT_TIME)
+      await page
+        .waitForNavigation({
+          timeout: 0,
+          waitUntil: 'domcontentloaded'
+        })
+        .then(async () => console.log(`Navigation done`))
 
       // Write the link
       fs.appendFile(
@@ -211,6 +141,9 @@ async function initSATAROSS () {
  * This is for DEVELOPMENT ONLY
  */
 process.on('uncaughtException', async err => {
+  const logChannel = client.guilds
+    .get(config.Discord.LOG_SERVER)
+    .channels.get(config.Discord.LOG_CHANNEL)
   console.log('Houston, We have a problem! ' + err)
 
   let errorEmbed = new Discord.RichEmbed()
