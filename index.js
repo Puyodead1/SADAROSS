@@ -105,50 +105,66 @@ init()
     let record = await Config.findById(conf.MONGO_ID)
     while (true) {
       for (let link of record.SATAROSS.LINK_LIST) {
-        if (record.SATAROSS.LINK_BLACKLIST.indexOf(link) > -1) {
-          continue
-        } else {
-          const browser = await puppeteer.launch({
-            /**
-             * Required on linux systems in headless mode
-             */
-            args: ['--no-sandbox'],
-            /**
-             * headless sets whether a browser page is displayed or not
-             * set to false to see a browser window
-             * set to true to run invisible
-             */
-            headless: conf.SATAROSS.HEADLESS
-          })
-          const page = await browser.newPage()
-          page.on('error', async err => {
-            console.log('error happen at the page: ', err)
-            process.exit(1)
-          })
-          page.on('pageerror', async err => {
-            console.log('error happen at the page: ', err)
-            process.exit(1)
-          })
+        const browser = await puppeteer.launch({
+          /**
+           * Required on linux systems in headless mode
+           */
+          args: ['--no-sandbox'],
+          /**
+           * headless sets whether a browser page is displayed or not
+           * set to false to see a browser window
+           * set to true to run invisible
+           */
+          headless: conf.SATAROSS.HEADLESS
+        })
+        const page = await browser.newPage()
+        page.on('error', async err => {
+          console.log('error happen at the page: ', err)
+          process.exit(1)
+        })
+        page.on('pageerror', async err => {
+          console.log('error happen at the page: ', err)
+          process.exit(1)
+        })
 
-          await page.setUserAgent(
-            'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
-          )
-          await page.setViewport({
-            width: 1920,
-            height: 1080
-          })
-          await page.goto(link)
+        await page.setUserAgent(
+          'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
+        )
+        await page.setViewport({
+          width: 1920,
+          height: 1080
+        })
+        await page.goto(link)
 
-          await require('./Utils/utils').wait(conf.SATAROSS.REDIRECT_WAIT_TIME)
-          /* await page
+        await require('./Utils/utils').wait(conf.SATAROSS.REDIRECT_WAIT_TIME)
+        /* await page
         .waitForNavigation({
           timeout: config.REDIRECT_WAIT_TIME,
           waitUntil: 'networkidle0'
         }) */
+        if (record.SATAROSS.LINK_BLACKLIST.indexOf(page.url()) > -1) {
+          continue
+        }
+        // Write the link
+        fs.appendFile(
+          conf.SATAROSS.SCANNED_LINKS_LOG,
+          currentTime + ' ' + page.url() + '\n',
+          err => {
+            if (err) throw err
+          }
+        )
+        //
 
+        const found = /virus|infected|pornographic|spyware|riskware|locked|microsoft|technician/i.test(
+          await page.content()
+        )
+
+        // This will print true or false
+        console.log(found)
+        if (found) {
           // Write the link
           fs.appendFile(
-            conf.SATAROSS.SCANNED_LINKS_LOG,
+            conf.SATAROSS.SCAM_LINK_LOG,
             currentTime + ' ' + page.url() + '\n',
             err => {
               if (err) throw err
@@ -156,42 +172,24 @@ init()
           )
           //
 
-          const found = /virus|infected|pornographic|spyware|riskware|locked|microsoft|technician/i.test(
-            await page.content()
-          )
+          console.log('posible scam site')
+          await page.screenshot({
+            path: `./data/${currentTime}.png`
+          })
 
-          // This will print true or false
-          console.log(found)
-          if (found) {
-            // Write the link
-            fs.appendFile(
-              conf.SATAROSS.SCAM_LINK_LOG,
-              currentTime + ' ' + page.url() + '\n',
-              err => {
-                if (err) throw err
-              }
+          let embed = new Discord.RichEmbed()
+            .setAuthor(client.user.username, client.user.avatarURL)
+            .setColor('#FF0000')
+            .setTitle(`Possible Scam Site Found!`)
+            .addField(`URL`, await page.url(), true)
+            .setTimestamp()
+            .setThumbnail(
+              `http://puyodead1-development.me:2685/img/${currentTime}.png`
             )
-            //
-
-            console.log('posible scam site')
-            await page.screenshot({
-              path: `./data/${currentTime}.png`
-            })
-
-            let embed = new Discord.RichEmbed()
-              .setAuthor(client.user.username, client.user.avatarURL)
-              .setColor('#FF0000')
-              .setTitle(`Possible Scam Site Found!`)
-              .addField(`URL`, await page.url(), true)
-              .setTimestamp()
-              .setThumbnail(
-                `http://puyodead1-development.me:2685/img/${currentTime}.png`
-              )
-              .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
-            await logChannel.send(embed)
-          }
-          await browser.close()
+            .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
+          await logChannel.send(embed)
         }
+        await browser.close()
       }
     }
   })
