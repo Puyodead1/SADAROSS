@@ -6,6 +6,7 @@ module.exports = async client => {
     .get(config.DISCORD.LOG_SERVER)
     .channels.get(config.DISCORD.LOG_CHANNEL)
   console.log(`Discord Ready!`)
+  client.user.setActivity(`I NEED A GIRL (AND A LIFE)`, { type: 'STREAMING' })
   const readyEmbed = new Discord.RichEmbed()
     .setAuthor(client.user.username, client.user.avatarURL)
     .setColor('#FF0000')
