@@ -142,7 +142,8 @@ init()
           timeout: config.REDIRECT_WAIT_TIME,
           waitUntil: 'networkidle0'
         }) */
-        if (record.SATAROSS.LINK_BLACKLIST.indexOf(page.url()) > -1) {
+        let domain = await page.url().split('.')
+        if (record.SATAROSS.LINK_BLACKLIST.indexOf(domain) > -1) {
           continue
         }
         // Write the link
