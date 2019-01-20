@@ -13,10 +13,7 @@ exports.run = async (client, msg, args) => {
         .setDescription(`Invalid Syntax`)
         .addField(`Usage`, `s!quit <reason>`)
         .setTimestamp()
-        .setFooter(
-          `SATAROSS by Puyodead1 and Puyodead1 Development`,
-          client.user.avatarURL
-        )
+        .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
       return msg.channel.send(embed)
     }
     let reason = args.join(' ')
@@ -33,10 +30,7 @@ exports.run = async (client, msg, args) => {
       .setColor('#FF0000')
       .setDescription(`You are not authorized to do that!`)
       .setTimestamp()
-      .setFooter(
-        `SATAROSS by Puyodead1 and Puyodead1 Development`,
-        client.user.avatarURL
-      )
+      .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
     return msg.channel.send(embed1)
   }
 }

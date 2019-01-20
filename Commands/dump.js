@@ -25,10 +25,7 @@ exports.run = async (client, msg, args) => {
         .addField(`All Links`, 's!dump -a or s!dump -all')
         .addField(`Scam Links Only`, 's!dump -s or s!dump -scam')
         .setTimestamp()
-        .setFooter(
-          `SATAROSS by Puyodead1 and Puyodead1 Development`,
-          client.user.avatarURL
-        )
+        .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
 
       return msg.channel.send(dumpHelpEmbed)
       break

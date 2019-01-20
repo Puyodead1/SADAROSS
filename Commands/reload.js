@@ -10,7 +10,7 @@ exports.run = async (client, message, args) => {
     .setColor('#FF0000')
     .setTimestamp()
     .setTitle('An Error Occured!')
-    .setFooter('Oops!', message.author.avatarURL)
+    .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
     .addField('Error unloading command', response)
   if (response) return message.channel.send(unloadError)
 
@@ -25,6 +25,7 @@ exports.run = async (client, message, args) => {
       'https://fivera.net/wp-content/uploads/2014/03/error_z0my4n.png'
     )
     .addField('Error loading command', response)
+    .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
   if (response) return message.channel.send(loadError)
 
   let success = new Discord.RichEmbed()

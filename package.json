@@ -35,6 +35,9 @@
     "discord.js": "^11.4.2",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "metrics": "git://github.com/mikejihbe/metrics.git#c0f9e336eb284cfe75b834c34af8ad716277a0ba",
+    "mongoose": "^5.4.1",
+    "mongoose-timestamp": "^0.6.0",
     "puppeteer": "^1.11.0",
     "request": "^2.88.0"
   },

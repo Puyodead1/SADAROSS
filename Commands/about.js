@@ -14,10 +14,7 @@ exports.run = async (client, msg, args) => {
     .addField(`Developed By`, `Puyodead1`, true)
     .addField(`Support Server`, `https://discord.gg/8aqEzCR`, true)
     .setTimestamp()
-    .setFooter(
-      `SATAROSS by Puyodead1 and Puyodead1 Development`,
-      client.user.avatarURL
-    )
+    .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
 
   return msg.channel.send(aboutEmbed)
 }

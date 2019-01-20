@@ -1,15 +1,15 @@
-const config = require('../config')
+const config = require('../config.json')
 
 module.exports = async (client, message) => {
   if (message.author.bot) return
 
-  if (message.content.startsWith(config.Discord.PREFIX)) {
+  if (message.content.startsWith(config.DISCORD.PREFIX)) {
     // Here we separate our 'command' name, and our 'arguments' for the command.
     // e.g. if we have the message '+say Is this the real life?' , we'll get the following:
     // command = say
     // args = ['Is', 'this', 'the', 'real', 'life?']
     const args = message.content
-      .slice(config.Discord.PREFIX.length)
+      .slice(config.DISCORD.PREFIX.length)
       .trim()
       .split(/ +/g)
     const command = args.shift().toLowerCase()

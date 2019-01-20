@@ -2,12 +2,12 @@ const Discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
   // eslint-disable-line no-unused-vars
-  const msg = await message.channel.send('🤔')
+  const msg = await message.channel.send(`🤔`)
   let embed = new Discord.RichEmbed()
     .setAuthor(client.user.username, client.user.avatarURL)
     .setColor('#FF0000')
     .setTitle('Pong!')
-    .setFooter(message.author.username, message.author.avatarURL)
+    .setFooter(`SATAROSS by Puyodead1`, client.user.avatarURL)
     .setTimestamp()
     .setThumbnail(client.user.avatarURL)
     .addField(

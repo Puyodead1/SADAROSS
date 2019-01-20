@@ -1,0 +1,27 @@
+{
+  "MONGO_ID": "DO NOT EDIT THIS YET",
+
+  "DISCORD": {
+    "TOKEN": "TOKEN",
+    "LOG_SERVER": "SERVER ID",
+    "LOG_CHANNEL": "CHANNEL ID",
+    "PREFIX": "s!"
+  },
+  "EXPRESS": {
+    "HTTP_PORT": 2685,
+    "HTTPS_PORT": 2686,
+    "CRT_FILE_PATH": "./puyo.crt",
+    "KEY_FILE_PATH": "./puyo.key",
+    "USE_HTTPS": true,
+    "BASE_URL": "http://localhost"
+  },
+  "SATAROSS": {
+    "DEBUG": true,
+    "REDIRECT_WAIT_TIME": 15000,
+    "SCANNED_LINKS_LOG": "scannedLinks.log",
+    "SCAM_LINK_LOG": "scamLinks.log",
+    "HEADLESS": true,
+    "WHOISXML_API_KEY": "",
+    "MONGO_URL": "mongodb://localhost:27017/sataross"
+  }
+}

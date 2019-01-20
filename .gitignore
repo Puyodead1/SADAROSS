@@ -2,7 +2,7 @@ node_modules/
 data/
 debug/
 
-config.js
+config.json
 scannedLinks.log
 scamLinks.log
 puyo.crt
