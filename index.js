@@ -69,6 +69,9 @@ async function init () {
 }
 init()
   .then(async () => {
+    /*eslint-disable */
+    let dash = require('appmetrics-dash').attach()
+    /* eslint-enable */
     app.use(express.static('./views/public'))
     app.use('/img', express.static('./data'))
     app.set('view engine', 'ejs')
